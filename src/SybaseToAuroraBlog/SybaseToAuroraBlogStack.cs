@@ -19,14 +19,13 @@ namespace SybaseToAuroraBlog
         private const string MyIpAddress = "0.0.0.0/0";
         private const string PostgresInstanceParameterGroup = "default.aurora-postgresql14";
         private const string PostgresClusterParameterGroup = "custom-aurora-postgresql13-babelfish-compat-4";
-        private Credentials auroraCredentials = null;
 
         internal SybaseToAuroraBlogStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
             var networkStack = createNetworkStack();
             var auroraCluster = createAuroraBabelPostgresCluster(networkStack);
             createDmsResources(networkStack, auroraCluster);
-            
+
             networkStack.SecurityGroup.AddIngressRule(Peer.Ipv4(MyIpAddress), Port.Tcp(5000), "Allow connections to Sybase instance on EC2");
             networkStack.SecurityGroup.AddIngressRule(Peer.Ipv4(MyIpAddress), Port.Tcp(3389), "Allow RDP connections to sybase EC2");
         }
@@ -37,7 +36,6 @@ namespace SybaseToAuroraBlog
             {
                 Version = AuroraPostgresEngineVersion.VER_14_6
             });
-            auroraCredentials = Credentials.FromGeneratedSecret(UserName);
     
             var auroraCluster = new DatabaseCluster(this, $"{Prefix}-aurora", new DatabaseClusterProps
             {
@@ -55,7 +53,7 @@ namespace SybaseToAuroraBlog
                     ParameterGroup = ParameterGroup.FromParameterGroupName(this, "instanceParametersGroup", PostgresInstanceParameterGroup)
                 },
                 DefaultDatabaseName = $"{Prefix}database",
-                Credentials = auroraCredentials,
+                Credentials = Credentials.FromGeneratedSecret(UserName),
                 RemovalPolicy = RemovalPolicy.DESTROY,
                 StorageEncrypted = true,
                 MonitoringInterval = Duration.Seconds(60),
