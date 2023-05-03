@@ -1,4 +1,4 @@
-# Welcome to your CDK C# project Sybase to Aurora Postgres babelfish Migration
+# Welcome to your CDK C# project Sybase to Aurora Postgres Babelfish Migration
 
 This AWS CDK project provides source code for [Blogpost](todo: Link) resources to migrate data from a Sybase database to an Aurora PostgreSQL database using AWS Database Migration Service (DMS). The project creates an Amazon Virtual Private Cloud (VPC) with public subnets and security groups, deploys a Sybase database instance, an Aurora PostgreSQL database cluster with Babelfish enabled, database secrets and sets up a DMS replication task between them.
 
